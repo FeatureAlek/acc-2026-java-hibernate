@@ -7,6 +7,7 @@ import bootcamp.hibernate_practical.entity.Book;
 import bootcamp.hibernate_practical.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,46 +31,67 @@ public class BookService {
     }
 
     public List<BookResponse> getAllBooks() {
-        // TODO:
-        // Fetch all books from the repository
-        // Convert each Book entity into BookResponse DTO
-        // Return the list
-        return null;
+        List<Book> books = bookRepository.findAll();
+        List<BookResponse> responses = new ArrayList<>();
+        for (Book book : books) {
+            responses.add(mapToResponse(book));
+        }
+        return responses;
     }
 
     public BookResponse getBookById(Long id) {
-        // TODO
-        // Find the book by its ID
-        // Throw RuntimeException if not found
-        // Convert the entity to BookResponse
-        return null;
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+        return mapToResponse(book);
     }
 
     public BookResponse updateBook(Long id, UpdateBookRequest request) {
-        // TODO
-        // Find existing book
-        // Update its fields
-        // Save the updated entity
-        // Convert to BookResponse
-        return null;
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
+
+        book.setTitle(request.getTitle());
+        book.setAuthor(request.getAuthor());
+        book.setGenre(request.getGenre());
+        book.setPublicationYear(request.getPublicationYear());
+        book.setAvailable(request.isAvailable());
+
+        Book updatedBook = bookRepository.save(book);
+        return mapToResponse(updatedBook);
     }
 
     public void deleteBook(Long id) {
-        // TODO
+        if (!bookRepository.existsById(id)) {
+            throw new RuntimeException("Book not found with id: " + id);
+        }
+        bookRepository.deleteById(id);
     }
 
     public List<BookResponse> findByAuthor(String author) {
-        // TODO
-        return null;
+        List<Book> books = bookRepository.findByAuthor(author);
+        List<BookResponse> responses = new ArrayList<>();
+        for (Book book : books) {
+            responses.add(mapToResponse(book));
+        }
+        return responses;
     }
 
     public List<BookResponse> findAvailableBooks(){
-        // TODO
-        return null;
+        List<Book> books = bookRepository.findByAvailableTrue();
+        List<BookResponse> responses = new ArrayList<>();
+        for (Book book : books) {
+            responses.add(mapToResponse(book));
+        }
+        return responses;
     }
 
     private BookResponse mapToResponse(Book book) {
-        // TODO: map Book to BookResponse
-        return null;
+        return new BookResponse(
+                book.getId(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getGenre(),
+                book.getPublicationYear(),
+                book.isAvailable()
+        );
     }
 }
