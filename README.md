@@ -16,6 +16,6 @@ Complete all of the 'TODO' portions of the code. The finished application should
 
 ## Stretch goals
 - Request validation ✅
-- Custom exception handling
+- Custom exception handling ✅
 - Searching by partial title
 - Add 'borrow' and 'return' endpoints along with the new 'borrowedStatus' field to the Book entity
