@@ -1,9 +1,6 @@
 package bootcamp.hibernate_practical.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +20,7 @@ public class Book {
     private String genre;
     private int publicationYear;
     private boolean available;
+    private boolean borrowedStatus = false;
 
     public Book(String title, String author, String genre, int publicationYear, boolean available) {
         this.title = title;

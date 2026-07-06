@@ -97,7 +97,38 @@ public class BookService {
                 book.getAuthor(),
                 book.getGenre(),
                 book.getPublicationYear(),
-                book.isAvailable()
+                book.isAvailable(),
+                book.isBorrowedStatus()
         );
+    }
+
+    public BookResponse borrowBook(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(id));
+
+        if (book.isBorrowedStatus()) {
+            throw new IllegalStateException("Book is already borrowed");
+        }
+
+        book.setBorrowedStatus(true);
+        book.setAvailable(false);
+
+        Book updatedBook = bookRepository.save(book);
+        return mapToResponse(updatedBook);
+    }
+
+    public BookResponse returnBook(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(id));
+
+        if (!book.isBorrowedStatus()) {
+            throw new IllegalStateException("Book was not borrowed");
+        }
+
+        book.setBorrowedStatus(false);
+        book.setAvailable(true);
+
+        Book updatedBook = bookRepository.save(book);
+        return mapToResponse(updatedBook);
     }
 }

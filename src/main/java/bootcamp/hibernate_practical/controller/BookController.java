@@ -5,6 +5,7 @@ import bootcamp.hibernate_practical.dto.CreateBookRequest;
 import bootcamp.hibernate_practical.dto.UpdateBookRequest;
 import bootcamp.hibernate_practical.service.BookService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -58,4 +59,13 @@ public class BookController {
         return bookService.searchByTitle(title);
     }
 
+    @PutMapping("/{id}/borrow")
+    public ResponseEntity<BookResponse> borrowBook(@PathVariable Long id) {
+        return ResponseEntity.ok(bookService.borrowBook(id));
+    }
+
+    @PutMapping("/{id}/return")
+    public ResponseEntity<BookResponse> returnBook(@PathVariable Long id) {
+        return ResponseEntity.ok(bookService.returnBook(id));
+    }
 }
